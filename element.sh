@@ -10,20 +10,20 @@ else
   then
     #get element by atomic number
     ELEMENT_BY_ATOMIC_NUMBER=$($PSQL "SELECT atomic_number FROM elements WHERE atomic_number=$1")
-    ELEMENT_DATA=$($PSQL "SELECT atomic_number, name, symbol, type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM properties INNER JOIN elements using(atomic_number) WHERE atomic_number='$ELEMENT_BY_ATOMIC_NUMBER'")
+    ELEMENT_DATA=$($PSQL "SELECT atomic_number, name, symbol, type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM properties INNER JOIN elements using(atomic_number) inner join types using(type_id) WHERE atomic_number='$ELEMENT_BY_ATOMIC_NUMBER'")
   # if not a number
   else  
 
     # get element by symbol
     ELEMENT_BY_SYMBOL=$($PSQL "SELECT symbol from elements WHERE symbol='$1'")
-    ELEMENT_DATA=$($PSQL "SELECT atomic_number, name, symbol, type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM properties INNER JOIN elements using(atomic_number) WHERE symbol='$ELEMENT_BY_SYMBOL'")
+    ELEMENT_DATA=$($PSQL "SELECT atomic_number, name, symbol, type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM properties INNER JOIN elements using(atomic_number) inner join types using(type_id) WHERE symbol='$ELEMENT_BY_SYMBOL'")
 
     # if not found
     if [[ -z $ELEMENT_BY_SYMBOL ]]
     then
       # get element by name
       ELEMENT_BY_NAME=$($PSQL "SELECT name from elements WHERE name='$1'")
-      ELEMENT_DATA=$($PSQL "SELECT atomic_number, name, symbol, type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM properties INNER JOIN elements using(atomic_number) WHERE name='$ELEMENT_BY_NAME'")
+      ELEMENT_DATA=$($PSQL "SELECT atomic_number, name, symbol, type, atomic_mass, melting_point_celsius, boiling_point_celsius FROM properties INNER JOIN elements using(atomic_number) inner join types using(type_id) WHERE name='$ELEMENT_BY_NAME'")
 
       # if not found
       if [[ -z $ELEMENT_BY_NAME ]]
